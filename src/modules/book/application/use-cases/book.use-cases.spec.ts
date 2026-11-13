@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BookNotFoundException } from '../../../../common/errors/not-found.error';
 import { BookEntity } from '../../domain/book.repository';
 import {
   CreateBookUseCase,
@@ -57,7 +57,7 @@ describe('Book Use Cases', () => {
     it('should throw NotFoundException when book not found', async () => {
       mockRepo.findById.mockResolvedValue(null);
       const useCase = new GetBookUseCase(mockRepo as any);
-      await expect(useCase.execute('uuid-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('uuid-x')).rejects.toThrow(BookNotFoundException);
     });
   });
 
@@ -74,7 +74,7 @@ describe('Book Use Cases', () => {
     it('should throw NotFoundException when book not found', async () => {
       mockRepo.findById.mockResolvedValue(null);
       const useCase = new UpdateBookUseCase(mockRepo as any);
-      await expect(useCase.execute('uuid-x', {})).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('uuid-x', {})).rejects.toThrow(BookNotFoundException);
     });
   });
 
@@ -89,7 +89,7 @@ describe('Book Use Cases', () => {
     it('should throw NotFoundException when book not found', async () => {
       mockRepo.findById.mockResolvedValue(null);
       const useCase = new DeleteBookUseCase(mockRepo as any);
-      await expect(useCase.execute('uuid-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('uuid-x')).rejects.toThrow(BookNotFoundException);
     });
   });
 });

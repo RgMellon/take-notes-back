@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BookNotFoundException, ChapterNotFoundException } from '../../../../common/errors/not-found.error';
 import { ChapterEntity } from '../../domain/chapter.repository';
 import {
   CreateChapterUseCase,
@@ -47,7 +47,7 @@ describe('Chapter Use Cases', () => {
     it('should throw NotFoundException when book not found', async () => {
       mockBookRepo.findById.mockResolvedValue(null);
       const useCase = new CreateChapterUseCase(mockRepo as any, mockBookRepo as any);
-      await expect(useCase.execute('book-x', { number: 1, title: 'Test' })).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('book-x', { number: 1, title: 'Test' })).rejects.toThrow(BookNotFoundException);
     });
   });
 
@@ -63,7 +63,7 @@ describe('Chapter Use Cases', () => {
     it('should throw NotFoundException when book not found', async () => {
       mockBookRepo.findById.mockResolvedValue(null);
       const useCase = new ListChaptersUseCase(mockRepo as any, mockBookRepo as any);
-      await expect(useCase.execute('book-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('book-x')).rejects.toThrow(BookNotFoundException);
     });
   });
 
@@ -78,7 +78,7 @@ describe('Chapter Use Cases', () => {
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
       const useCase = new GetChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(ChapterNotFoundException);
     });
   });
 
@@ -95,7 +95,7 @@ describe('Chapter Use Cases', () => {
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
       const useCase = new UpdateChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x', {})).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('book-1', 'ch-x', {})).rejects.toThrow(ChapterNotFoundException);
     });
   });
 
@@ -110,7 +110,7 @@ describe('Chapter Use Cases', () => {
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
       const useCase = new DeleteChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(ChapterNotFoundException);
     });
   });
 });

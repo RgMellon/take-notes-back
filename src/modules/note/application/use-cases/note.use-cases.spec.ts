@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ChapterNotFoundException, NoteNotFoundException } from '../../../../common/errors/not-found.error';
 import { RawNoteEntity } from '../../domain/raw-note.repository';
 import { GetNoteUseCase, UpsertNoteUseCase } from './note.use-cases';
 
@@ -32,7 +32,7 @@ describe('Note Use Cases', () => {
     it('should throw NotFoundException when note not found', async () => {
       mockRepo.findByChapter.mockResolvedValue(null);
       const useCase = new GetNoteUseCase(mockRepo as any);
-      await expect(useCase.execute('ch-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('ch-x')).rejects.toThrow(NoteNotFoundException);
     });
   });
 
@@ -49,7 +49,7 @@ describe('Note Use Cases', () => {
     it('should throw NotFoundException when chapter not found', async () => {
       mockChapterRepo.findById.mockResolvedValue(null);
       const useCase = new UpsertNoteUseCase(mockRepo as any, mockChapterRepo as any);
-      await expect(useCase.execute('ch-x', { content: 'test' })).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('ch-x', { content: 'test' })).rejects.toThrow(ChapterNotFoundException);
     });
   });
 });

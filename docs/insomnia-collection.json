@@ -1,0 +1,232 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app",
+  "resources": [
+    {
+      "_id": "wrk_take_notes",
+      "_type": "workspace",
+      "name": "Take Notes API",
+      "description": "API para organizar anotações de estudo e gerar documentos estruturados via IA prontos para RAG."
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_take_notes",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "book_id": "",
+        "chapter_id": ""
+      }
+    },
+    {
+      "_id": "fld_books",
+      "_type": "request_group",
+      "parentId": "wrk_take_notes",
+      "name": "Books",
+      "description": "CRUD de livros. Um livro agrupa capítulos de um mesmo material de estudo."
+    },
+    {
+      "_id": "req_create_book",
+      "_type": "request",
+      "parentId": "fld_books",
+      "name": "Criar livro",
+      "description": "Cria um novo livro com título e autor. O ID gerado deve ser salvo na variável book_id do environment para uso nas rotas de capítulos.",
+      "method": "POST",
+      "url": "{{ base_url }}/books",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Clean Architecture\",\n  \"author\": \"Robert C. Martin\"\n}"
+      }
+    },
+    {
+      "_id": "req_list_books",
+      "_type": "request",
+      "parentId": "fld_books",
+      "name": "Listar livros",
+      "description": "Retorna todos os livros cadastrados, ordenados por data de criação (mais recente primeiro).",
+      "method": "GET",
+      "url": "{{ base_url }}/books",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_book",
+      "_type": "request",
+      "parentId": "fld_books",
+      "name": "Buscar livro",
+      "description": "Retorna um livro pelo ID. Substitua :id pelo UUID do livro ou use a variável {{ book_id }}.",
+      "method": "GET",
+      "url": "{{ base_url }}/books/{{ book_id }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_update_book",
+      "_type": "request",
+      "parentId": "fld_books",
+      "name": "Atualizar livro",
+      "description": "Atualiza título e/ou autor de um livro. Todos os campos são opcionais.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/books/{{ book_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Clean Architecture - 2nd Edition\"\n}"
+      }
+    },
+    {
+      "_id": "req_delete_book",
+      "_type": "request",
+      "parentId": "fld_books",
+      "name": "Deletar livro",
+      "description": "Remove um livro e todos os seus capítulos, notas e documentos estruturados em cascata. Retorna 204 sem corpo.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/books/{{ book_id }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "fld_chapters",
+      "_type": "request_group",
+      "parentId": "wrk_take_notes",
+      "name": "Chapters",
+      "description": "CRUD de capítulos vinculados a um livro. Cada capítulo tem um número único dentro do livro e um status (DRAFT ou STRUCTURED)."
+    },
+    {
+      "_id": "req_create_chapter",
+      "_type": "request",
+      "parentId": "fld_chapters",
+      "name": "Criar capítulo",
+      "description": "Cria um capítulo dentro de um livro. O número deve ser único por livro. O status começa como DRAFT. Salve o ID retornado na variável chapter_id.",
+      "method": "POST",
+      "url": "{{ base_url }}/books/{{ book_id }}/chapters",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"number\": 1,\n  \"title\": \"O que é Arquitetura Limpa\"\n}"
+      }
+    },
+    {
+      "_id": "req_list_chapters",
+      "_type": "request",
+      "parentId": "fld_chapters",
+      "name": "Listar capítulos",
+      "description": "Retorna todos os capítulos de um livro. Inclui status (DRAFT/STRUCTURED) e tags geradas pela IA.",
+      "method": "GET",
+      "url": "{{ base_url }}/books/{{ book_id }}/chapters",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_chapter",
+      "_type": "request",
+      "parentId": "fld_chapters",
+      "name": "Buscar capítulo",
+      "description": "Retorna um capítulo específico pelo ID dentro de um livro.",
+      "method": "GET",
+      "url": "{{ base_url }}/books/{{ book_id }}/chapters/{{ chapter_id }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_update_chapter",
+      "_type": "request",
+      "parentId": "fld_chapters",
+      "name": "Atualizar capítulo",
+      "description": "Atualiza número, título e/ou tags de um capítulo. Todos os campos são opcionais.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/books/{{ book_id }}/chapters/{{ chapter_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Arquitetura Limpa e seus princípios\"\n}"
+      }
+    },
+    {
+      "_id": "req_delete_chapter",
+      "_type": "request",
+      "parentId": "fld_chapters",
+      "name": "Deletar capítulo",
+      "description": "Remove um capítulo e sua nota bruta e documento estruturado em cascata. Retorna 204 sem corpo.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/books/{{ book_id }}/chapters/{{ chapter_id }}",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "fld_notes",
+      "_type": "request_group",
+      "parentId": "wrk_take_notes",
+      "name": "Notes",
+      "description": "Notas brutas por capítulo. Cada capítulo tem no máximo uma nota. O PUT faz upsert — cria se não existir, atualiza se já existir."
+    },
+    {
+      "_id": "req_get_note",
+      "_type": "request",
+      "parentId": "fld_notes",
+      "name": "Buscar nota",
+      "description": "Retorna a nota bruta do capítulo. Retorna 404 se o capítulo ainda não tiver nota.",
+      "method": "GET",
+      "url": "{{ base_url }}/chapters/{{ chapter_id }}/note",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_upsert_note",
+      "_type": "request",
+      "parentId": "fld_notes",
+      "name": "Criar / Atualizar nota",
+      "description": "Cria ou substitui a nota bruta do capítulo. Escreva livremente — a IA vai estruturar o conteúdo depois. Após salvar a nota, use POST /generate para gerar o documento estruturado.",
+      "method": "PUT",
+      "url": "{{ base_url }}/chapters/{{ chapter_id }}/note",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"content\": \"Arquitetura limpa separa o sistema em camadas concêntricas. A regra de dependência diz que o código só pode apontar para dentro. Entidades no centro, casos de uso em volta, depois adaptadores e por fim frameworks. Isso garante que regras de negócio não dependem de banco de dados ou framework.\"\n}"
+      }
+    },
+    {
+      "_id": "fld_structured",
+      "_type": "request_group",
+      "parentId": "wrk_take_notes",
+      "name": "Structured Documents",
+      "description": "Geração e leitura de documentos estruturados via IA. O documento gerado contém Markdown com frontmatter YAML, headings hierárquicos, diagramas Mermaid e tags — otimizado para indexação RAG."
+    },
+    {
+      "_id": "req_generate",
+      "_type": "request",
+      "parentId": "fld_structured",
+      "name": "Gerar documento estruturado",
+      "description": "Aciona a IA (Gemini 2.0 Flash ou GPT-4o Mini) para transformar a nota bruta do capítulo em um documento Markdown estruturado. Atualiza o status do capítulo para STRUCTURED e salva as tags geradas. Pode ser chamado múltiplas vezes — sempre sobrescreve o documento anterior.",
+      "method": "POST",
+      "url": "{{ base_url }}/chapters/{{ chapter_id }}/generate",
+      "headers": [],
+      "body": {}
+    },
+    {
+      "_id": "req_get_structured",
+      "_type": "request",
+      "parentId": "fld_structured",
+      "name": "Buscar documento estruturado",
+      "description": "Retorna o documento estruturado gerado pela IA para o capítulo. Retorna 404 se o POST /generate ainda não foi chamado.",
+      "method": "GET",
+      "url": "{{ base_url }}/chapters/{{ chapter_id }}/structured",
+      "headers": [],
+      "body": {}
+    }
+  ]
+}

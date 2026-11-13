@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { BookNotFoundException, ChapterNotFoundException } from '../../../../common/errors/not-found.error';
 import type { ChapterRepository } from '../../domain/chapter.repository';
 import { CHAPTER_REPOSITORY_TOKEN } from '../../domain/chapter.repository';
 import type { BookRepository } from '../../../book/domain/book.repository';
@@ -14,7 +15,7 @@ export class CreateChapterUseCase {
 
   async execute(bookId: string, dto: CreateChapterDto): Promise<ChapterResponseDto> {
     const book = await this.bookRepo.findById(bookId);
-    if (!book) throw new NotFoundException(`Book ${bookId} not found`);
+    if (!book) throw new BookNotFoundException(`Book ${bookId} not found`);
     const chapter = await this.repo.create({ ...dto, bookId, tags: dto.tags ?? [] });
     return ChapterResponseDto.fromEntity(chapter);
   }
@@ -29,7 +30,7 @@ export class ListChaptersUseCase {
 
   async execute(bookId: string): Promise<ChapterResponseDto[]> {
     const book = await this.bookRepo.findById(bookId);
-    if (!book) throw new NotFoundException(`Book ${bookId} not found`);
+    if (!book) throw new BookNotFoundException(`Book ${bookId} not found`);
     const chapters = await this.repo.findAllByBook(bookId);
     return chapters.map(ChapterResponseDto.fromEntity);
   }
@@ -41,7 +42,7 @@ export class GetChapterUseCase {
 
   async execute(bookId: string, id: string): Promise<ChapterResponseDto> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
-    if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
+    if (!chapter) throw new ChapterNotFoundException(`Chapter ${id} not found`);
     return ChapterResponseDto.fromEntity(chapter);
   }
 }
@@ -52,7 +53,7 @@ export class UpdateChapterUseCase {
 
   async execute(bookId: string, id: string, dto: UpdateChapterDto): Promise<ChapterResponseDto> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
-    if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
+    if (!chapter) throw new ChapterNotFoundException(`Chapter ${id} not found`);
     const updated = await this.repo.update(id, dto);
     return ChapterResponseDto.fromEntity(updated);
   }
@@ -64,7 +65,7 @@ export class DeleteChapterUseCase {
 
   async execute(bookId: string, id: string): Promise<void> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
-    if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
+    if (!chapter) throw new ChapterNotFoundException(`Chapter ${id} not found`);
     return this.repo.delete(id);
   }
 }

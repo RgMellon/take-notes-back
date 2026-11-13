@@ -1,11 +1,14 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { BookNotFoundException } from '../../../../common/errors/not-found.error';
 import type { BookRepository } from '../../domain/book.repository';
 import { BOOK_REPOSITORY_TOKEN } from '../../domain/book.repository';
 import { BookResponseDto, CreateBookDto } from '../../interface/dto/book.dto';
 
 @Injectable()
 export class CreateBookUseCase {
-  constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
+  constructor(
+    @Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository,
+  ) {}
 
   async execute(dto: CreateBookDto): Promise<BookResponseDto> {
     const book = await this.repo.create(dto);
@@ -15,32 +18,41 @@ export class CreateBookUseCase {
 
 @Injectable()
 export class ListBooksUseCase {
-  constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
+  constructor(
+    @Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository,
+  ) {}
 
   async execute(): Promise<BookResponseDto[]> {
     const books = await this.repo.findAll();
-    return books.map(BookResponseDto.fromEntity);
+    return books.map((b) => BookResponseDto.fromEntity(b));
   }
 }
 
 @Injectable()
 export class GetBookUseCase {
-  constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
+  constructor(
+    @Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository,
+  ) {}
 
   async execute(id: string): Promise<BookResponseDto> {
     const book = await this.repo.findById(id);
-    if (!book) throw new NotFoundException(`Book ${id} not found`);
+    if (!book) throw new BookNotFoundException(`Book ${id} not found`);
     return BookResponseDto.fromEntity(book);
   }
 }
 
 @Injectable()
 export class UpdateBookUseCase {
-  constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
+  constructor(
+    @Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository,
+  ) {}
 
-  async execute(id: string, dto: Partial<CreateBookDto>): Promise<BookResponseDto> {
+  async execute(
+    id: string,
+    dto: Partial<CreateBookDto>,
+  ): Promise<BookResponseDto> {
     const book = await this.repo.findById(id);
-    if (!book) throw new NotFoundException(`Book ${id} not found`);
+    if (!book) throw new BookNotFoundException(`Book ${id} not found`);
     const updated = await this.repo.update(id, dto);
     return BookResponseDto.fromEntity(updated);
   }
@@ -48,11 +60,13 @@ export class UpdateBookUseCase {
 
 @Injectable()
 export class DeleteBookUseCase {
-  constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
+  constructor(
+    @Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository,
+  ) {}
 
   async execute(id: string): Promise<void> {
     const book = await this.repo.findById(id);
-    if (!book) throw new NotFoundException(`Book ${id} not found`);
+    if (!book) throw new BookNotFoundException(`Book ${id} not found`);
     return this.repo.delete(id);
   }
 }

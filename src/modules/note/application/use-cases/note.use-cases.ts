@@ -1,4 +1,5 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ChapterNotFoundException, NoteNotFoundException } from '../../../../common/errors/not-found.error';
 import type { RawNoteRepository } from '../../domain/raw-note.repository';
 import { RAW_NOTE_REPOSITORY_TOKEN } from '../../domain/raw-note.repository';
 import type { ChapterRepository } from '../../../chapter/domain/chapter.repository';
@@ -11,7 +12,7 @@ export class GetNoteUseCase {
 
   async execute(chapterId: string): Promise<NoteResponseDto> {
     const note = await this.repo.findByChapter(chapterId);
-    if (!note) throw new NotFoundException(`Note for chapter ${chapterId} not found`);
+    if (!note) throw new NoteNotFoundException(`Note for chapter ${chapterId} not found`);
     return NoteResponseDto.fromEntity(note);
   }
 }
@@ -25,7 +26,7 @@ export class UpsertNoteUseCase {
 
   async execute(chapterId: string, dto: UpsertNoteDto): Promise<NoteResponseDto> {
     const chapter = await this.chapterRepo.findById(chapterId);
-    if (!chapter) throw new NotFoundException(`Chapter ${chapterId} not found`);
+    if (!chapter) throw new ChapterNotFoundException(`Chapter ${chapterId} not found`);
     const note = await this.repo.upsert(chapterId, dto.content);
     return NoteResponseDto.fromEntity(note);
   }

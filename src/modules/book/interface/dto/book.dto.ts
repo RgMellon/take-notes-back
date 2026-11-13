@@ -22,22 +22,14 @@ export class UpdateBookDto {
   author?: string;
 }
 
-export interface BookResponseDto {
+export class BookResponseDto {
   id: string;
   title: string;
   author: string;
   createdAt: Date;
   updatedAt: Date;
-}
 
-export namespace BookResponseDto {
-  export function fromEntity(entity: { id: string; title: string; author: string; createdAt: Date; updatedAt: Date }): BookResponseDto {
-    return {
-      id: entity.id,
-      title: entity.title,
-      author: entity.author,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    };
+  static fromEntity(entity: { id: string; title: string; author: string; createdAt: Date; updatedAt: Date }): BookResponseDto {
+    return Object.assign(new BookResponseDto(), entity);
   }
 }

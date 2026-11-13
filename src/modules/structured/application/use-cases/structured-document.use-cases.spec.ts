@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ChapterNotFoundException, NoteNotFoundException, StructuredDocumentNotFoundException } from '../../../../common/errors/not-found.error';
 import { StructuredDocumentEntity } from '../../domain/structured-document.repository';
 import { GenerateStructuredDocumentUseCase, GetStructuredDocumentUseCase } from './structured-document.use-cases';
 
@@ -67,7 +67,7 @@ describe('Structured Document Use Cases', () => {
         mockChapterRepo as any,
         mockAi as any,
       );
-      await expect(useCase.execute('ch-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('ch-x')).rejects.toThrow(ChapterNotFoundException);
     });
 
     it('should throw NotFoundException when note not found', async () => {
@@ -79,7 +79,7 @@ describe('Structured Document Use Cases', () => {
         mockChapterRepo as any,
         mockAi as any,
       );
-      await expect(useCase.execute('ch-1')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('ch-1')).rejects.toThrow(NoteNotFoundException);
     });
   });
 
@@ -94,7 +94,7 @@ describe('Structured Document Use Cases', () => {
     it('should throw NotFoundException when document not found', async () => {
       mockRepo.findByChapter.mockResolvedValue(null);
       const useCase = new GetStructuredDocumentUseCase(mockRepo as any);
-      await expect(useCase.execute('ch-x')).rejects.toThrow(NotFoundException);
+      await expect(useCase.execute('ch-x')).rejects.toThrow(StructuredDocumentNotFoundException);
     });
   });
 });
