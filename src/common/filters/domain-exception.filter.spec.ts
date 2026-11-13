@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 import { DomainExceptionFilter } from './domain-exception.filter';
 import {
   BookNotFoundException,
@@ -11,8 +11,10 @@ import { DomainError } from '../errors/domain.error';
 const mockJson = jest.fn();
 const mockStatus = jest.fn().mockReturnValue({ json: mockJson });
 const mockGetResponse = jest.fn().mockReturnValue({ status: mockStatus });
-const mockSwitchToHttp = jest.fn().mockReturnValue({ getResponse: mockGetResponse });
-const mockHost = { switchToHttp: mockSwitchToHttp } as any;
+const mockSwitchToHttp = jest
+  .fn()
+  .mockReturnValue({ getResponse: mockGetResponse });
+const mockHost = { switchToHttp: mockSwitchToHttp } as unknown as ArgumentsHost;
 
 describe('DomainExceptionFilter', () => {
   let filter: DomainExceptionFilter;
@@ -24,9 +26,15 @@ describe('DomainExceptionFilter', () => {
 
   it.each([
     ['BookNotFoundException', new BookNotFoundException('Book x not found')],
-    ['ChapterNotFoundException', new ChapterNotFoundException('Chapter x not found')],
+    [
+      'ChapterNotFoundException',
+      new ChapterNotFoundException('Chapter x not found'),
+    ],
     ['NoteNotFoundException', new NoteNotFoundException('Note x not found')],
-    ['StructuredDocumentNotFoundException', new StructuredDocumentNotFoundException('Doc x not found')],
+    [
+      'StructuredDocumentNotFoundException',
+      new StructuredDocumentNotFoundException('Doc x not found'),
+    ],
   ])('should return 404 for %s', (_name, exception) => {
     filter.catch(exception, mockHost);
 
