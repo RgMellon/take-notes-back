@@ -20,5 +20,6 @@ import { BookController } from './interface/book.controller';
     UpdateBookUseCase,
     DeleteBookUseCase,
   ],
+  exports: [BOOK_REPOSITORY_TOKEN],
 })
 export class BookModule {}
