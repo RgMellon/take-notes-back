@@ -14,14 +14,12 @@ export class StructuredDocumentController {
 
   @Post('generate')
   @HttpCode(200)
-  async generateDoc(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
-    const doc = await this.generate.execute(chapterId);
-    return StructuredDocumentResponseDto.fromEntity(doc);
+  generateDoc(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
+    return this.generate.execute(chapterId);
   }
 
   @Get('structured')
-  async findOne(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
-    const doc = await this.getDoc.execute(chapterId);
-    return StructuredDocumentResponseDto.fromEntity(doc);
+  findOne(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
+    return this.getDoc.execute(chapterId);
   }
 }

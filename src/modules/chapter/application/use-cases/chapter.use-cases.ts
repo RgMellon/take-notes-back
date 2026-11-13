@@ -3,7 +3,7 @@ import type { ChapterRepository } from '../../domain/chapter.repository';
 import { CHAPTER_REPOSITORY_TOKEN } from '../../domain/chapter.repository';
 import type { BookRepository } from '../../../book/domain/book.repository';
 import { BOOK_REPOSITORY_TOKEN } from '../../../book/domain/book.repository';
-import { CreateChapterDto, UpdateChapterDto } from '../../interface/dto/chapter.dto';
+import { ChapterResponseDto, CreateChapterDto, UpdateChapterDto } from '../../interface/dto/chapter.dto';
 
 @Injectable()
 export class CreateChapterUseCase {
@@ -12,10 +12,11 @@ export class CreateChapterUseCase {
     @Inject(BOOK_REPOSITORY_TOKEN) private readonly bookRepo: BookRepository,
   ) {}
 
-  async execute(bookId: string, dto: CreateChapterDto) {
+  async execute(bookId: string, dto: CreateChapterDto): Promise<ChapterResponseDto> {
     const book = await this.bookRepo.findById(bookId);
     if (!book) throw new NotFoundException(`Book ${bookId} not found`);
-    return this.repo.create({ ...dto, bookId, tags: dto.tags ?? [] });
+    const chapter = await this.repo.create({ ...dto, bookId, tags: dto.tags ?? [] });
+    return ChapterResponseDto.fromEntity(chapter);
   }
 }
 
@@ -26,10 +27,11 @@ export class ListChaptersUseCase {
     @Inject(BOOK_REPOSITORY_TOKEN) private readonly bookRepo: BookRepository,
   ) {}
 
-  async execute(bookId: string) {
+  async execute(bookId: string): Promise<ChapterResponseDto[]> {
     const book = await this.bookRepo.findById(bookId);
     if (!book) throw new NotFoundException(`Book ${bookId} not found`);
-    return this.repo.findAllByBook(bookId);
+    const chapters = await this.repo.findAllByBook(bookId);
+    return chapters.map(ChapterResponseDto.fromEntity);
   }
 }
 
@@ -37,10 +39,10 @@ export class ListChaptersUseCase {
 export class GetChapterUseCase {
   constructor(@Inject(CHAPTER_REPOSITORY_TOKEN) private readonly repo: ChapterRepository) {}
 
-  async execute(bookId: string, id: string) {
+  async execute(bookId: string, id: string): Promise<ChapterResponseDto> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
     if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
-    return chapter;
+    return ChapterResponseDto.fromEntity(chapter);
   }
 }
 
@@ -48,10 +50,11 @@ export class GetChapterUseCase {
 export class UpdateChapterUseCase {
   constructor(@Inject(CHAPTER_REPOSITORY_TOKEN) private readonly repo: ChapterRepository) {}
 
-  async execute(bookId: string, id: string, dto: UpdateChapterDto) {
+  async execute(bookId: string, id: string, dto: UpdateChapterDto): Promise<ChapterResponseDto> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
     if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
-    return this.repo.update(id, dto);
+    const updated = await this.repo.update(id, dto);
+    return ChapterResponseDto.fromEntity(updated);
   }
 }
 
@@ -59,7 +62,7 @@ export class UpdateChapterUseCase {
 export class DeleteChapterUseCase {
   constructor(@Inject(CHAPTER_REPOSITORY_TOKEN) private readonly repo: ChapterRepository) {}
 
-  async execute(bookId: string, id: string) {
+  async execute(bookId: string, id: string): Promise<void> {
     const chapter = await this.repo.findByBookAndId(bookId, id);
     if (!chapter) throw new NotFoundException(`Chapter ${id} not found`);
     return this.repo.delete(id);

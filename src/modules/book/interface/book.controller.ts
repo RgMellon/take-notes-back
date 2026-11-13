@@ -19,32 +19,28 @@ export class BookController {
   ) {}
 
   @Post()
-  async create(@Body() dto: CreateBookDto): Promise<BookResponseDto> {
-    const book = await this.createBook.execute(dto);
-    return BookResponseDto.fromEntity(book);
+  create(@Body() dto: CreateBookDto): Promise<BookResponseDto> {
+    return this.createBook.execute(dto);
   }
 
   @Get()
-  async findAll(): Promise<BookResponseDto[]> {
-    const books = await this.listBooks.execute();
-    return books.map(BookResponseDto.fromEntity);
+  findAll(): Promise<BookResponseDto[]> {
+    return this.listBooks.execute();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BookResponseDto> {
-    const book = await this.getBook.execute(id);
-    return BookResponseDto.fromEntity(book);
+  findOne(@Param('id') id: string): Promise<BookResponseDto> {
+    return this.getBook.execute(id);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: UpdateBookDto): Promise<BookResponseDto> {
-    const book = await this.updateBook.execute(id, dto);
-    return BookResponseDto.fromEntity(book);
+  update(@Param('id') id: string, @Body() dto: UpdateBookDto): Promise<BookResponseDto> {
+    return this.updateBook.execute(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string): Promise<void> {
-    await this.deleteBook.execute(id);
+  remove(@Param('id') id: string): Promise<void> {
+    return this.deleteBook.execute(id);
   }
 }

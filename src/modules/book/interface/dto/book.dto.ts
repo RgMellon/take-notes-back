@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { BookEntity } from '../../domain/book.repository';
 
 export class CreateBookDto {
   @IsString()
@@ -32,7 +31,7 @@ export interface BookResponseDto {
 }
 
 export namespace BookResponseDto {
-  export function fromEntity(entity: BookEntity): BookResponseDto {
+  export function fromEntity(entity: { id: string; title: string; author: string; createdAt: Date; updatedAt: Date }): BookResponseDto {
     return {
       id: entity.id,
       title: entity.title,

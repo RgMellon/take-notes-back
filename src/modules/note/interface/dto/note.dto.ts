@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { RawNoteEntity } from '../../domain/raw-note.repository';
 
 export class UpsertNoteDto {
   @IsString()
@@ -15,7 +14,7 @@ export interface NoteResponseDto {
 }
 
 export namespace NoteResponseDto {
-  export function fromEntity(entity: RawNoteEntity): NoteResponseDto {
+  export function fromEntity(entity: { id: string; chapterId: string; content: string; updatedAt: Date }): NoteResponseDto {
     return {
       id: entity.id,
       chapterId: entity.chapterId,

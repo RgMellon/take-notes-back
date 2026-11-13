@@ -1,14 +1,15 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { BookRepository } from '../../domain/book.repository';
 import { BOOK_REPOSITORY_TOKEN } from '../../domain/book.repository';
-import { CreateBookDto } from '../../interface/dto/book.dto';
+import { BookResponseDto, CreateBookDto } from '../../interface/dto/book.dto';
 
 @Injectable()
 export class CreateBookUseCase {
   constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
 
-  execute(dto: CreateBookDto) {
-    return this.repo.create(dto);
+  async execute(dto: CreateBookDto): Promise<BookResponseDto> {
+    const book = await this.repo.create(dto);
+    return BookResponseDto.fromEntity(book);
   }
 }
 
@@ -16,8 +17,9 @@ export class CreateBookUseCase {
 export class ListBooksUseCase {
   constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
 
-  execute() {
-    return this.repo.findAll();
+  async execute(): Promise<BookResponseDto[]> {
+    const books = await this.repo.findAll();
+    return books.map(BookResponseDto.fromEntity);
   }
 }
 
@@ -25,10 +27,10 @@ export class ListBooksUseCase {
 export class GetBookUseCase {
   constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
 
-  async execute(id: string) {
+  async execute(id: string): Promise<BookResponseDto> {
     const book = await this.repo.findById(id);
     if (!book) throw new NotFoundException(`Book ${id} not found`);
-    return book;
+    return BookResponseDto.fromEntity(book);
   }
 }
 
@@ -36,10 +38,11 @@ export class GetBookUseCase {
 export class UpdateBookUseCase {
   constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
 
-  async execute(id: string, dto: Partial<CreateBookDto>) {
+  async execute(id: string, dto: Partial<CreateBookDto>): Promise<BookResponseDto> {
     const book = await this.repo.findById(id);
     if (!book) throw new NotFoundException(`Book ${id} not found`);
-    return this.repo.update(id, dto);
+    const updated = await this.repo.update(id, dto);
+    return BookResponseDto.fromEntity(updated);
   }
 }
 
@@ -47,7 +50,7 @@ export class UpdateBookUseCase {
 export class DeleteBookUseCase {
   constructor(@Inject(BOOK_REPOSITORY_TOKEN) private readonly repo: BookRepository) {}
 
-  async execute(id: string) {
+  async execute(id: string): Promise<void> {
     const book = await this.repo.findById(id);
     if (!book) throw new NotFoundException(`Book ${id} not found`);
     return this.repo.delete(id);

@@ -19,36 +19,32 @@ export class ChapterController {
   ) {}
 
   @Post()
-  async create(@Param('bookId') bookId: string, @Body() dto: CreateChapterDto): Promise<ChapterResponseDto> {
-    const chapter = await this.createChapter.execute(bookId, dto);
-    return ChapterResponseDto.fromEntity(chapter);
+  create(@Param('bookId') bookId: string, @Body() dto: CreateChapterDto): Promise<ChapterResponseDto> {
+    return this.createChapter.execute(bookId, dto);
   }
 
   @Get()
-  async findAll(@Param('bookId') bookId: string): Promise<ChapterResponseDto[]> {
-    const chapters = await this.listChapters.execute(bookId);
-    return chapters.map(ChapterResponseDto.fromEntity);
+  findAll(@Param('bookId') bookId: string): Promise<ChapterResponseDto[]> {
+    return this.listChapters.execute(bookId);
   }
 
   @Get(':id')
-  async findOne(@Param('bookId') bookId: string, @Param('id') id: string): Promise<ChapterResponseDto> {
-    const chapter = await this.getChapter.execute(bookId, id);
-    return ChapterResponseDto.fromEntity(chapter);
+  findOne(@Param('bookId') bookId: string, @Param('id') id: string): Promise<ChapterResponseDto> {
+    return this.getChapter.execute(bookId, id);
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('bookId') bookId: string,
     @Param('id') id: string,
     @Body() dto: UpdateChapterDto,
   ): Promise<ChapterResponseDto> {
-    const chapter = await this.updateChapter.execute(bookId, id, dto);
-    return ChapterResponseDto.fromEntity(chapter);
+    return this.updateChapter.execute(bookId, id, dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('bookId') bookId: string, @Param('id') id: string): Promise<void> {
-    await this.deleteChapter.execute(bookId, id);
+  remove(@Param('bookId') bookId: string, @Param('id') id: string): Promise<void> {
+    return this.deleteChapter.execute(bookId, id);
   }
 }

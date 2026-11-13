@@ -1,5 +1,3 @@
-import { StructuredDocumentEntity } from '../../domain/structured-document.repository';
-
 export interface StructuredDocumentResponseDto {
   id: string;
   chapterId: string;
@@ -9,7 +7,13 @@ export interface StructuredDocumentResponseDto {
 }
 
 export namespace StructuredDocumentResponseDto {
-  export function fromEntity(entity: StructuredDocumentEntity): StructuredDocumentResponseDto {
+  export function fromEntity(entity: {
+    id: string;
+    chapterId: string;
+    markdownContent: string;
+    frontmatter: Record<string, unknown>;
+    generatedAt: Date;
+  }): StructuredDocumentResponseDto {
     return {
       id: entity.id,
       chapterId: entity.chapterId,

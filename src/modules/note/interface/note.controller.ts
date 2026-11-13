@@ -10,14 +10,12 @@ export class NoteController {
   ) {}
 
   @Get()
-  async findOne(@Param('chapterId') chapterId: string): Promise<NoteResponseDto> {
-    const note = await this.getNote.execute(chapterId);
-    return NoteResponseDto.fromEntity(note);
+  findOne(@Param('chapterId') chapterId: string): Promise<NoteResponseDto> {
+    return this.getNote.execute(chapterId);
   }
 
   @Put()
-  async upsert(@Param('chapterId') chapterId: string, @Body() dto: UpsertNoteDto): Promise<NoteResponseDto> {
-    const note = await this.upsertNote.execute(chapterId, dto);
-    return NoteResponseDto.fromEntity(note);
+  upsert(@Param('chapterId') chapterId: string, @Body() dto: UpsertNoteDto): Promise<NoteResponseDto> {
+    return this.upsertNote.execute(chapterId, dto);
   }
 }
