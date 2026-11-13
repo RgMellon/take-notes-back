@@ -9,7 +9,14 @@ import { AiModule } from './modules/ai/ai.module';
 import { StructuredModule } from './modules/structured/structured.module';
 
 @Module({
-  imports: [PrismaModule, BookModule, ChapterModule, NoteModule, AiModule, StructuredModule],
+  imports: [
+    PrismaModule,
+    BookModule,
+    ChapterModule,
+    NoteModule,
+    AiModule,
+    StructuredModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

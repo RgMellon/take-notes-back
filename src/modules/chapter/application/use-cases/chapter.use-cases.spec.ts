@@ -1,4 +1,7 @@
-import { BookNotFoundException, ChapterNotFoundException } from '../../../../common/errors/not-found.error';
+import {
+  BookNotFoundException,
+  ChapterNotFoundException,
+} from '../../../../common/errors/not-found.error';
 import { ChapterEntity } from '../../domain/chapter.repository';
 import {
   CreateChapterUseCase,
@@ -39,15 +42,20 @@ describe('Chapter Use Cases', () => {
     it('should create a chapter', async () => {
       mockBookRepo.findById.mockResolvedValue({ id: 'book-1' });
       mockRepo.create.mockResolvedValue(mockChapter);
-      const useCase = new CreateChapterUseCase(mockRepo as any, mockBookRepo as any);
-      const result = await useCase.execute('book-1', { number: 1, title: 'Nomes Significativos' });
+      const useCase = new CreateChapterUseCase(mockRepo, mockBookRepo as any);
+      const result = await useCase.execute('book-1', {
+        number: 1,
+        title: 'Nomes Significativos',
+      });
       expect(result).toEqual(mockChapter);
     });
 
     it('should throw NotFoundException when book not found', async () => {
       mockBookRepo.findById.mockResolvedValue(null);
-      const useCase = new CreateChapterUseCase(mockRepo as any, mockBookRepo as any);
-      await expect(useCase.execute('book-x', { number: 1, title: 'Test' })).rejects.toThrow(BookNotFoundException);
+      const useCase = new CreateChapterUseCase(mockRepo, mockBookRepo as any);
+      await expect(
+        useCase.execute('book-x', { number: 1, title: 'Test' }),
+      ).rejects.toThrow(BookNotFoundException);
     });
   });
 
@@ -55,30 +63,34 @@ describe('Chapter Use Cases', () => {
     it('should return chapters for a book', async () => {
       mockBookRepo.findById.mockResolvedValue({ id: 'book-1' });
       mockRepo.findAllByBook.mockResolvedValue([mockChapter]);
-      const useCase = new ListChaptersUseCase(mockRepo as any, mockBookRepo as any);
+      const useCase = new ListChaptersUseCase(mockRepo, mockBookRepo as any);
       const result = await useCase.execute('book-1');
       expect(result).toEqual([mockChapter]);
     });
 
     it('should throw NotFoundException when book not found', async () => {
       mockBookRepo.findById.mockResolvedValue(null);
-      const useCase = new ListChaptersUseCase(mockRepo as any, mockBookRepo as any);
-      await expect(useCase.execute('book-x')).rejects.toThrow(BookNotFoundException);
+      const useCase = new ListChaptersUseCase(mockRepo, mockBookRepo as any);
+      await expect(useCase.execute('book-x')).rejects.toThrow(
+        BookNotFoundException,
+      );
     });
   });
 
   describe('GetChapterUseCase', () => {
     it('should return a chapter', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(mockChapter);
-      const useCase = new GetChapterUseCase(mockRepo as any);
+      const useCase = new GetChapterUseCase(mockRepo);
       const result = await useCase.execute('book-1', 'ch-1');
       expect(result).toEqual(mockChapter);
     });
 
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
-      const useCase = new GetChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(ChapterNotFoundException);
+      const useCase = new GetChapterUseCase(mockRepo);
+      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(
+        ChapterNotFoundException,
+      );
     });
   });
 
@@ -87,15 +99,19 @@ describe('Chapter Use Cases', () => {
       const updated = { ...mockChapter, title: 'Funções' };
       mockRepo.findByBookAndId.mockResolvedValue(mockChapter);
       mockRepo.update.mockResolvedValue(updated);
-      const useCase = new UpdateChapterUseCase(mockRepo as any);
-      const result = await useCase.execute('book-1', 'ch-1', { title: 'Funções' });
+      const useCase = new UpdateChapterUseCase(mockRepo);
+      const result = await useCase.execute('book-1', 'ch-1', {
+        title: 'Funções',
+      });
       expect(result.title).toBe('Funções');
     });
 
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
-      const useCase = new UpdateChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x', {})).rejects.toThrow(ChapterNotFoundException);
+      const useCase = new UpdateChapterUseCase(mockRepo);
+      await expect(useCase.execute('book-1', 'ch-x', {})).rejects.toThrow(
+        ChapterNotFoundException,
+      );
     });
   });
 
@@ -103,14 +119,16 @@ describe('Chapter Use Cases', () => {
     it('should delete a chapter', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(mockChapter);
       mockRepo.delete.mockResolvedValue(undefined);
-      const useCase = new DeleteChapterUseCase(mockRepo as any);
+      const useCase = new DeleteChapterUseCase(mockRepo);
       await expect(useCase.execute('book-1', 'ch-1')).resolves.toBeUndefined();
     });
 
     it('should throw NotFoundException when chapter not found', async () => {
       mockRepo.findByBookAndId.mockResolvedValue(null);
-      const useCase = new DeleteChapterUseCase(mockRepo as any);
-      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(ChapterNotFoundException);
+      const useCase = new DeleteChapterUseCase(mockRepo);
+      await expect(useCase.execute('book-1', 'ch-x')).rejects.toThrow(
+        ChapterNotFoundException,
+      );
     });
   });
 });

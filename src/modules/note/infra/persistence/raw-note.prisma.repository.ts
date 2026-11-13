@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { RawNoteEntity, RawNoteRepository } from '../../domain/raw-note.repository';
+import {
+  RawNoteEntity,
+  RawNoteRepository,
+} from '../../domain/raw-note.repository';
 
 @Injectable()
 export class RawNotePrismaRepository implements RawNoteRepository {

@@ -18,7 +18,10 @@ export class BookPrismaRepository implements BookRepository {
     return this.prisma.book.create({ data });
   }
 
-  update(id: string, data: { title?: string; author?: string }): Promise<BookEntity> {
+  update(
+    id: string,
+    data: { title?: string; author?: string },
+  ): Promise<BookEntity> {
     return this.prisma.book.update({ where: { id }, data });
   }
 

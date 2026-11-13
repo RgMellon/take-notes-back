@@ -1,5 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ChapterNotFoundException, NoteNotFoundException, StructuredDocumentNotFoundException } from '../../../../common/errors/not-found.error';
+import {
+  ChapterNotFoundException,
+  NoteNotFoundException,
+  StructuredDocumentNotFoundException,
+} from '../../../../common/errors/not-found.error';
 import type { AiProvider } from '../../../ai/ai.interface';
 import { AI_PROVIDER_TOKEN } from '../../../ai/ai.interface';
 import type { ChapterRepository } from '../../../chapter/domain/chapter.repository';
@@ -13,22 +17,39 @@ import { StructuredDocumentResponseDto } from '../../interface/dto/structured-do
 @Injectable()
 export class GenerateStructuredDocumentUseCase {
   constructor(
-    @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN) private readonly repo: StructuredDocumentRepository,
-    @Inject(RAW_NOTE_REPOSITORY_TOKEN) private readonly noteRepo: RawNoteRepository,
-    @Inject(CHAPTER_REPOSITORY_TOKEN) private readonly chapterRepo: ChapterRepository,
+    @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN)
+    private readonly repo: StructuredDocumentRepository,
+    @Inject(RAW_NOTE_REPOSITORY_TOKEN)
+    private readonly noteRepo: RawNoteRepository,
+    @Inject(CHAPTER_REPOSITORY_TOKEN)
+    private readonly chapterRepo: ChapterRepository,
     @Inject(AI_PROVIDER_TOKEN) private readonly ai: AiProvider,
   ) {}
 
   async execute(chapterId: string): Promise<StructuredDocumentResponseDto> {
     const chapter = await this.chapterRepo.findById(chapterId);
-    if (!chapter) throw new ChapterNotFoundException(`Chapter ${chapterId} not found`);
+    if (!chapter)
+      throw new ChapterNotFoundException(`Chapter ${chapterId} not found`);
 
     const note = await this.noteRepo.findByChapter(chapterId);
-    if (!note) throw new NoteNotFoundException(`Note for chapter ${chapterId} not found`);
+    if (!note)
+      throw new NoteNotFoundException(
+        `Note for chapter ${chapterId} not found`,
+      );
 
-    const result = await this.ai.generateStructuredMarkdown(note.content, chapter.title);
-    const doc = await this.repo.upsert(chapterId, result.markdownContent, result.frontmatter);
-    await this.chapterRepo.update(chapterId, { tags: result.tags, status: 'STRUCTURED' });
+    const result = await this.ai.generateStructuredMarkdown(
+      note.content,
+      chapter.title,
+    );
+    const doc = await this.repo.upsert(
+      chapterId,
+      result.markdownContent,
+      result.frontmatter,
+    );
+    await this.chapterRepo.update(chapterId, {
+      tags: result.tags,
+      status: 'STRUCTURED',
+    });
 
     return StructuredDocumentResponseDto.fromEntity(doc);
   }
@@ -37,12 +58,16 @@ export class GenerateStructuredDocumentUseCase {
 @Injectable()
 export class GetStructuredDocumentUseCase {
   constructor(
-    @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN) private readonly repo: StructuredDocumentRepository,
+    @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN)
+    private readonly repo: StructuredDocumentRepository,
   ) {}
 
   async execute(chapterId: string): Promise<StructuredDocumentResponseDto> {
     const doc = await this.repo.findByChapter(chapterId);
-    if (!doc) throw new StructuredDocumentNotFoundException(`Structured document for chapter ${chapterId} not found`);
+    if (!doc)
+      throw new StructuredDocumentNotFoundException(
+        `Structured document for chapter ${chapterId} not found`,
+      );
     return StructuredDocumentResponseDto.fromEntity(doc);
   }
 }

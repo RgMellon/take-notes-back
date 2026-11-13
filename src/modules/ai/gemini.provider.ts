@@ -9,7 +9,10 @@ export class GeminiProvider implements AiProvider {
     this.client = new GoogleGenAI({ apiKey });
   }
 
-  async generateStructuredMarkdown(rawNotes: string, chapterTitle: string): Promise<GenerateResult> {
+  async generateStructuredMarkdown(
+    rawNotes: string,
+    chapterTitle: string,
+  ): Promise<GenerateResult> {
     const response = await this.client.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: `Chapter title: ${chapterTitle}\n\nRaw notes:\n${rawNotes}`,

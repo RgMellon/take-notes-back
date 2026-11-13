@@ -15,8 +15,21 @@ export interface ChapterRepository {
   findAllByBook(bookId: string): Promise<ChapterEntity[]>;
   findById(id: string): Promise<ChapterEntity | null>;
   findByBookAndId(bookId: string, id: string): Promise<ChapterEntity | null>;
-  create(data: { bookId: string; number: number; title: string; tags: string[] }): Promise<ChapterEntity>;
-  update(id: string, data: { number?: number; title?: string; tags?: string[]; status?: ChapterStatus }): Promise<ChapterEntity>;
+  create(data: {
+    bookId: string;
+    number: number;
+    title: string;
+    tags: string[];
+  }): Promise<ChapterEntity>;
+  update(
+    id: string,
+    data: {
+      number?: number;
+      title?: string;
+      tags?: string[];
+      status?: ChapterStatus;
+    },
+  ): Promise<ChapterEntity>;
   delete(id: string): Promise<void>;
 }
 

@@ -29,7 +29,13 @@ export class BookResponseDto {
   createdAt: Date;
   updatedAt: Date;
 
-  static fromEntity(entity: { id: string; title: string; author: string; createdAt: Date; updatedAt: Date }): BookResponseDto {
+  static fromEntity(entity: {
+    id: string;
+    title: string;
+    author: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }): BookResponseDto {
     return Object.assign(new BookResponseDto(), entity);
   }
 }

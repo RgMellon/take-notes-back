@@ -1,4 +1,11 @@
-import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export type ChapterStatus = 'DRAFT' | 'STRUCTURED';
 
@@ -46,7 +53,16 @@ export interface ChapterResponseDto {
 }
 
 export namespace ChapterResponseDto {
-  export function fromEntity(entity: { id: string; bookId: string; number: number; title: string; tags: string[]; status: ChapterStatus; createdAt: Date; updatedAt: Date }): ChapterResponseDto {
+  export function fromEntity(entity: {
+    id: string;
+    bookId: string;
+    number: number;
+    title: string;
+    tags: string[];
+    status: ChapterStatus;
+    createdAt: Date;
+    updatedAt: Date;
+  }): ChapterResponseDto {
     return {
       id: entity.id,
       bookId: entity.bookId,

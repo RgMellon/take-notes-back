@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import {
   CreateBookUseCase,
   DeleteBookUseCase,
@@ -34,7 +43,10 @@ export class BookController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateBookDto): Promise<BookResponseDto> {
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateBookDto,
+  ): Promise<BookResponseDto> {
     return this.updateBook.execute(id, dto);
   }
 

@@ -9,12 +9,18 @@ export class OpenAiProvider implements AiProvider {
     this.client = new OpenAI({ apiKey });
   }
 
-  async generateStructuredMarkdown(rawNotes: string, chapterTitle: string): Promise<GenerateResult> {
+  async generateStructuredMarkdown(
+    rawNotes: string,
+    chapterTitle: string,
+  ): Promise<GenerateResult> {
     const response = await this.client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: `Chapter title: ${chapterTitle}\n\nRaw notes:\n${rawNotes}` },
+        {
+          role: 'user',
+          content: `Chapter title: ${chapterTitle}\n\nRaw notes:\n${rawNotes}`,
+        },
       ],
       response_format: { type: 'json_object' },
     });

@@ -5,7 +5,10 @@ export interface GenerateResult {
 }
 
 export interface AiProvider {
-  generateStructuredMarkdown(rawNotes: string, chapterTitle: string): Promise<GenerateResult>;
+  generateStructuredMarkdown(
+    rawNotes: string,
+    chapterTitle: string,
+  ): Promise<GenerateResult>;
 }
 
 export const AI_PROVIDER_TOKEN = 'AI_PROVIDER_TOKEN';

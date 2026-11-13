@@ -14,7 +14,12 @@ export interface NoteResponseDto {
 }
 
 export namespace NoteResponseDto {
-  export function fromEntity(entity: { id: string; chapterId: string; content: string; updatedAt: Date }): NoteResponseDto {
+  export function fromEntity(entity: {
+    id: string;
+    chapterId: string;
+    content: string;
+    updatedAt: Date;
+  }): NoteResponseDto {
     return {
       id: entity.id,
       chapterId: entity.chapterId,

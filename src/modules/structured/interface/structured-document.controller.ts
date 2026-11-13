@@ -14,12 +14,16 @@ export class StructuredDocumentController {
 
   @Post('generate')
   @HttpCode(200)
-  generateDoc(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
+  generateDoc(
+    @Param('chapterId') chapterId: string,
+  ): Promise<StructuredDocumentResponseDto> {
     return this.generate.execute(chapterId);
   }
 
   @Get('structured')
-  findOne(@Param('chapterId') chapterId: string): Promise<StructuredDocumentResponseDto> {
+  findOne(
+    @Param('chapterId') chapterId: string,
+  ): Promise<StructuredDocumentResponseDto> {
     return this.getDoc.execute(chapterId);
   }
 }

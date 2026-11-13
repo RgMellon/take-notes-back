@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import {
   CreateChapterUseCase,
   DeleteChapterUseCase,
@@ -6,7 +15,11 @@ import {
   ListChaptersUseCase,
   UpdateChapterUseCase,
 } from '../application/use-cases/chapter.use-cases';
-import { ChapterResponseDto, CreateChapterDto, UpdateChapterDto } from './dto/chapter.dto';
+import {
+  ChapterResponseDto,
+  CreateChapterDto,
+  UpdateChapterDto,
+} from './dto/chapter.dto';
 
 @Controller('books/:bookId/chapters')
 export class ChapterController {
@@ -19,7 +32,10 @@ export class ChapterController {
   ) {}
 
   @Post()
-  create(@Param('bookId') bookId: string, @Body() dto: CreateChapterDto): Promise<ChapterResponseDto> {
+  create(
+    @Param('bookId') bookId: string,
+    @Body() dto: CreateChapterDto,
+  ): Promise<ChapterResponseDto> {
     return this.createChapter.execute(bookId, dto);
   }
 
@@ -29,7 +45,10 @@ export class ChapterController {
   }
 
   @Get(':id')
-  findOne(@Param('bookId') bookId: string, @Param('id') id: string): Promise<ChapterResponseDto> {
+  findOne(
+    @Param('bookId') bookId: string,
+    @Param('id') id: string,
+  ): Promise<ChapterResponseDto> {
     return this.getChapter.execute(bookId, id);
   }
 
@@ -44,7 +63,10 @@ export class ChapterController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('bookId') bookId: string, @Param('id') id: string): Promise<void> {
+  remove(
+    @Param('bookId') bookId: string,
+    @Param('id') id: string,
+  ): Promise<void> {
     return this.deleteChapter.execute(bookId, id);
   }
 }
