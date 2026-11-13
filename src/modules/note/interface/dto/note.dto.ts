@@ -1,0 +1,26 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+import { RawNoteEntity } from '../../domain/raw-note.repository';
+
+export class UpsertNoteDto {
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+}
+
+export interface NoteResponseDto {
+  id: string;
+  chapterId: string;
+  content: string;
+  updatedAt: Date;
+}
+
+export namespace NoteResponseDto {
+  export function fromEntity(entity: RawNoteEntity): NoteResponseDto {
+    return {
+      id: entity.id,
+      chapterId: entity.chapterId,
+      content: entity.content,
+      updatedAt: entity.updatedAt,
+    };
+  }
+}
