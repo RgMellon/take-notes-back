@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { ChapterEntity, ChapterRepository } from '../../domain/chapter.repository';
+import { ChapterEntity, ChapterRepository, ChapterStatus } from '../../domain/chapter.repository';
 
 @Injectable()
 export class ChapterPrismaRepository implements ChapterRepository {
@@ -22,7 +22,7 @@ export class ChapterPrismaRepository implements ChapterRepository {
     return this.prisma.chapter.create({ data });
   }
 
-  update(id: string, data: { number?: number; title?: string; tags?: string[] }): Promise<ChapterEntity> {
+  update(id: string, data: { number?: number; title?: string; tags?: string[]; status?: ChapterStatus }): Promise<ChapterEntity> {
     return this.prisma.chapter.update({ where: { id }, data });
   }
 
