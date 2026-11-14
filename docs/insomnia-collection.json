@@ -227,6 +227,22 @@
       "url": "{{ base_url }}/chapters/{{ chapter_id }}/structured",
       "headers": [],
       "body": {}
+    },
+    {
+      "_id": "req_update_structured",
+      "_type": "request",
+      "parentId": "fld_structured",
+      "name": "Atualizar documento estruturado (sem IA)",
+      "description": "Atualiza diretamente o conteúdo Markdown do documento estruturado sem acionar a IA. Use quando quiser editar o documento manualmente após uma geração. Não altera o status do capítulo. Ver ADR-001.",
+      "method": "PUT",
+      "url": "{{ base_url }}/chapters/{{ chapter_id }}/structured",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"markdownContent\": \"# Título\\n\\nConteúdo editado manualmente.\"\n}"
+      }
     }
   ]
 }

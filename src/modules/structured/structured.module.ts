@@ -5,6 +5,7 @@ import { NoteModule } from '../note/note.module';
 import {
   GenerateStructuredDocumentUseCase,
   GetStructuredDocumentUseCase,
+  UpdateStructuredDocumentUseCase,
 } from './application/use-cases/structured-document.use-cases';
 import { STRUCTURED_DOCUMENT_REPOSITORY_TOKEN } from './domain/structured-document.repository';
 import { StructuredDocumentPrismaRepository } from './infra/persistence/structured-document.prisma.repository';
@@ -20,6 +21,7 @@ import { StructuredDocumentController } from './interface/structured-document.co
     },
     GenerateStructuredDocumentUseCase,
     GetStructuredDocumentUseCase,
+    UpdateStructuredDocumentUseCase,
   ],
 })
 export class StructuredModule {}

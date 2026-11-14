@@ -148,6 +148,7 @@ yarn start:prod
 | PUT | `/chapters/:chapterId/note` | Criar/atualizar nota |
 | POST | `/chapters/:chapterId/generate` | Gerar documento estruturado via IA |
 | GET | `/chapters/:chapterId/structured` | Buscar documento estruturado |
+| PUT | `/chapters/:chapterId/structured` | Atualizar documento estruturado sem IA (ver ADR-001) |
 
 ---
 

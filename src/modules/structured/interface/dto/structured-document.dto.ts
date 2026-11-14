@@ -23,3 +23,15 @@ export namespace StructuredDocumentResponseDto {
     };
   }
 }
+
+import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+
+export class UpdateStructuredDocumentDto {
+  @IsString()
+  @IsNotEmpty()
+  markdownContent!: string;
+
+  @IsOptional()
+  @IsObject()
+  frontmatter?: Record<string, unknown>;
+}

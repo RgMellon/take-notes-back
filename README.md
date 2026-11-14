@@ -34,6 +34,7 @@ stateDiagram-v2
     DRAFT --> DRAFT : nota atualizada
     DRAFT --> STRUCTURED : POST /generate
     STRUCTURED --> STRUCTURED : POST /generate novamente
+    STRUCTURED --> STRUCTURED : PUT /structured (edição direta, sem IA)
 ```
 
 ---
@@ -58,6 +59,8 @@ sequenceDiagram
     API->>DB: update chapter (tags, status → STRUCTURED)
     API-->>Client: StructuredDocumentResponseDto
 ```
+
+Para edições diretas no documento sem acionar a IA, use `PUT /chapters/:chapterId/structured`. Ver [`docs/adrs/ADR-001-structured-document-edit.md`](./docs/adrs/ADR-001-structured-document-edit.md).
 
 ---
 

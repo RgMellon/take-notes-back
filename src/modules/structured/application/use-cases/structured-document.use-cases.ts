@@ -56,6 +56,29 @@ export class GenerateStructuredDocumentUseCase {
 }
 
 @Injectable()
+export class UpdateStructuredDocumentUseCase {
+  constructor(
+    @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN)
+    private readonly repo: StructuredDocumentRepository,
+  ) {}
+
+  async execute(
+    chapterId: string,
+    markdownContent: string,
+    frontmatter: Record<string, unknown>,
+  ): Promise<StructuredDocumentResponseDto> {
+    const existing = await this.repo.findByChapter(chapterId);
+    if (!existing)
+      throw new StructuredDocumentNotFoundException(
+        `Structured document for chapter ${chapterId} not found`,
+      );
+
+    const doc = await this.repo.upsert(chapterId, markdownContent, frontmatter);
+    return StructuredDocumentResponseDto.fromEntity(doc);
+  }
+}
+
+@Injectable()
 export class GetStructuredDocumentUseCase {
   constructor(
     @Inject(STRUCTURED_DOCUMENT_REPOSITORY_TOKEN)
