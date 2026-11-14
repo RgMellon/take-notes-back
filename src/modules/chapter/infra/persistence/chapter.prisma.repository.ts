@@ -25,6 +25,10 @@ export class ChapterPrismaRepository implements ChapterRepository {
     return this.prisma.chapter.findFirst({ where: { id, bookId } });
   }
 
+  findByBookAndNumber(bookId: string, number: number): Promise<ChapterEntity | null> {
+    return this.prisma.chapter.findFirst({ where: { bookId, number } });
+  }
+
   create(data: {
     bookId: string;
     number: number;

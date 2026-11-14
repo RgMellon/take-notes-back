@@ -3,6 +3,7 @@ import {
   BookNotFoundException,
   ChapterNotFoundException,
 } from '../../../../common/errors/not-found.error';
+import { ChapterNumberConflictException } from '../../../../common/errors/conflict.error';
 import type { ChapterRepository } from '../../domain/chapter.repository';
 import { CHAPTER_REPOSITORY_TOKEN } from '../../domain/chapter.repository';
 import type { BookRepository } from '../../../book/domain/book.repository';
@@ -26,6 +27,13 @@ export class CreateChapterUseCase {
   ): Promise<ChapterResponseDto> {
     const book = await this.bookRepo.findById(bookId);
     if (!book) throw new BookNotFoundException(`Book ${bookId} not found`);
+
+    const existing = await this.repo.findByBookAndNumber(bookId, dto.number);
+    if (existing)
+      throw new ChapterNumberConflictException(
+        `Já existe um capítulo com o número ${dto.number} neste livro`,
+      );
+
     const chapter = await this.repo.create({
       ...dto,
       bookId,

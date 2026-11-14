@@ -12,6 +12,7 @@ import {
   NoteNotFoundException,
   StructuredDocumentNotFoundException,
 } from '../errors/not-found.error';
+import { ChapterNumberConflictException } from '../errors/conflict.error';
 
 @Catch(DomainError)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -36,6 +37,10 @@ export class DomainExceptionFilter implements ExceptionFilter {
       exception instanceof StructuredDocumentNotFoundException
     ) {
       return HttpStatus.NOT_FOUND;
+    }
+
+    if (exception instanceof ChapterNumberConflictException) {
+      return HttpStatus.CONFLICT;
     }
 
     return HttpStatus.INTERNAL_SERVER_ERROR;

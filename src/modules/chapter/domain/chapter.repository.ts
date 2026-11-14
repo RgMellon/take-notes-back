@@ -15,6 +15,7 @@ export interface ChapterRepository {
   findAllByBook(bookId: string): Promise<ChapterEntity[]>;
   findById(id: string): Promise<ChapterEntity | null>;
   findByBookAndId(bookId: string, id: string): Promise<ChapterEntity | null>;
+  findByBookAndNumber(bookId: string, number: number): Promise<ChapterEntity | null>;
   create(data: {
     bookId: string;
     number: number;
